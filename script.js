@@ -23,17 +23,20 @@ function Gameboard(){
     return { getBoard, dropToken}
 }
 
-function playersTurn(){
+function Players(){
     const players = [
         {
             name: "playerOne",
-            token: 1
+            token: 1,
+            tokenCounter: 0
         },
         {
             name: "playerTwo",
-            token: 2
+            token: 2,
+            tokenCounter: 0
         }
     ]
+    const getPlayers = () => players;
     let activePlayer = players[0];
     const getActivePlayer = () => activePlayer;
 
@@ -42,27 +45,37 @@ function playersTurn(){
         console.info(`${activePlayer.name} turn`)
     }
 
-    return { getActivePlayer, switchPlayer};
+    return { getActivePlayer, switchPlayer, getPlayers};
 }
 
 function checkWinner(){
+    const players = Players().getPlayers();
+    const [ first, second ] = players;
     const winnerMatches = 3;
     const test = board.getBoard();
-    let matches = 0;
     let hasWinner = false;
     console.error(board.getBoard());
     //vertical win check
     for(let i = 0; i < test.length + 1; i++){
         if(hasWinner) break;
         for(let j = 0; j < test.length; j++){
-            if(test[j][i] === 1){
-                matches++;
+            if(test[j][i] === first.token){
+                first.tokenCounter++;
+                second.tokenCounter = 0;
             }
-            else{
-                matches = 0;
+            else if(test[j][i] === second.token){
+                second.tokenCounter++;
+                first.tokenCounter = 0;
             }
-            if(matches === winnerMatches) {
-                console.log('win');
+            else first.tokenCounter = second.tokenCounter = 0;
+
+            if(first.tokenCounter === winnerMatches) {
+                console.log(`${first.name} is a Winner!`);
+                hasWinner = true;
+                break;
+            }
+            if(second.tokenCounter === winnerMatches){
+                console.log(`${second.name} is a Winner!`);
                 hasWinner = true;
                 break;
             }
@@ -71,11 +84,15 @@ function checkWinner(){
 }
 
 const board = Gameboard();
-const player = playersTurn();
-board.dropToken(0, player.getActivePlayer().token);
-player.switchPlayer();
-board.dropToken(1, player.getActivePlayer().token);
-player.switchPlayer();
+const player = Players();
+// board.dropToken(0, player.getActivePlayer().token);
+// player.switchPlayer();
+// board.dropToken(1, player.getActivePlayer().token);
+// player.switchPlayer();
+
+board.dropToken(0, 1);
+board.dropToken(0, 1);
+board.dropToken(0, 1);
 
 console.log(board.getBoard());
 
