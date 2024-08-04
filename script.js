@@ -51,49 +51,60 @@ function Players(){
 function checkWinner(){
     const players = Players().getPlayers();
     const [ first, second ] = players;
-    const winnerMatches = 3;
-    const test = board.getBoard();
+    const gameBoard = board.getBoard();
     let hasWinner = false;
-    console.error(board.getBoard());
+    console.error(gameBoard);
     //vertical win check
-    for(let i = 0; i < test.length + 1; i++){
+    for(let i = 0; i < gameBoard.length + 1; i++){
         if(hasWinner) break;
-        for(let j = 0; j < test.length; j++){
-            if(test[j][i] === first.token){
+        for(let j = 0; j < gameBoard.length; j++){
+            if(gameBoard[j][i] === first.token){
                 first.tokenCounter++;
                 second.tokenCounter = 0;
             }
-            else if(test[j][i] === second.token){
+            else if(gameBoard[j][i] === second.token){
                 second.tokenCounter++;
                 first.tokenCounter = 0;
             }
             else first.tokenCounter = second.tokenCounter = 0;
-
-            if(first.tokenCounter === winnerMatches) {
-                console.log(`${first.name} is a Winner!`);
-                hasWinner = true;
-                break;
-            }
-            if(second.tokenCounter === winnerMatches){
-                console.log(`${second.name} is a Winner!`);
-                hasWinner = true;
-                break;
-            }
+            
+            announceWinner(first, second);
         }
+    }
+    //horizontal win check
+    for(let k = 0; k < gameBoard.length; k++){
+        if(hasWinner) break;
+        for(let l = 0; l < gameBoard[k].length; l++){
+            if(gameBoard[k][l] === first.token){
+                first.tokenCounter++;
+                second.tokenCounter = 0;
+            }
+            else if(gameBoard[k][l] === second.token){
+                second.tokenCounter++;
+                first.tokenCounter = 0;
+            }
+            else first.tokenCounter = second.tokenCounter = 0;
+            
+            announceWinner(first, second);
+        }
+    }
+}
+
+function announceWinner(firstPlayer, secondPlayer){
+    const winnerMatches = 3;
+    if(firstPlayer.tokenCounter === winnerMatches) {
+        console.log(`${firstPlayer.name} is a Winner!`);
+    }
+    if(secondPlayer.tokenCounter === winnerMatches){
+        console.log(`${secondPlayer.name} is a Winner!`);
     }
 }
 
 const board = Gameboard();
 const player = Players();
-// board.dropToken(0, player.getActivePlayer().token);
-// player.switchPlayer();
-// board.dropToken(1, player.getActivePlayer().token);
-// player.switchPlayer();
-
-board.dropToken(0, 1);
-board.dropToken(0, 1);
-board.dropToken(0, 1);
-
-console.log(board.getBoard());
+board.dropToken(0, player.getActivePlayer().token);
+player.switchPlayer();
+board.dropToken(1, player.getActivePlayer().token);
+player.switchPlayer();
 
 checkWinner();
