@@ -53,7 +53,6 @@ function checkWinner(){
     const [ first, second ] = players;
     const gameBoard = board.getBoard();
     let hasWinner = false;
-    console.error(gameBoard);
     //vertical win check
     for(let i = 0; i < gameBoard.length + 1; i++){
         if(hasWinner) break;
@@ -88,6 +87,7 @@ function checkWinner(){
             announceWinner(first, second);
         }
     }
+    //[TODO] diagonal win check
 }
 
 function announceWinner(firstPlayer, secondPlayer){
